@@ -66,6 +66,11 @@ public class LibraryManagerPage extends AbstractPage {
     }
 
     public LibraryPackageDetails openPackageDetails(int index){
+        try {
+            Thread.sleep(2000l); //to avoid StaleElementReferenceException in line 81
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         wait.until(ExpectedConditions.elementToBeClickable(installedPackageNames.get(index))).click();
         return new LibraryPackageDetails();
     }
