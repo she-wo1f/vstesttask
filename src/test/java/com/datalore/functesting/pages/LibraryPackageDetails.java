@@ -75,6 +75,11 @@ public class LibraryPackageDetails extends LibraryManagerPage {
     }
 
     public boolean canBeUpdated(){
+        try {
+            Thread.sleep(2000l);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         wait.until(ExpectedConditions.elementToBeClickable(changePackageVersion)).click();
         List<WebElement> availableVersions = driver.findElements(By.xpath("//li[@class='dropdown_item']"));
         changePackageVersion.click();
