@@ -25,7 +25,7 @@ public class TestLogger extends TestWatcher {
     static {
         testReportPath = DataloreTest.getTestReportPath();
         driver = DataloreTest.getDriver();
-        new File(testReportPath+"/screenshots").mkdirs();
+        new File(testReportPath).mkdir();
         htmlReporter = new ExtentHtmlReporter(testReportPath
                 + "/TestReport.html");
         htmlReporter.config().setDocumentTitle("Datalore test report");
@@ -42,31 +42,15 @@ public class TestLogger extends TestWatcher {
     }
 
     @Override
-    protected void succeeded(Description description) {
-    }
-
-    @Override
     protected void failed(Throwable e, Description desc) {
         test.fail(e);
-        try {
-              test.addScreenCaptureFromPath("./screenshots/"
-                    + desc.getMethodName()
-                    + ".jpg");
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+        addScreenshotIfExists(desc);
     }
 
     @Override
     protected void skipped(AssumptionViolatedException e, Description desc) {
         test.warning(e);
-        try {
-            test.addScreenCaptureFromPath("./screenshots/"
-                    + desc.getMethodName()
-                    + ".jpg");
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
+        addScreenshotIfExists(desc);
     }
 
     @Override
@@ -88,6 +72,20 @@ public class TestLogger extends TestWatcher {
         catch (IOException e)
         {
             e.printStackTrace();
+        }
+    }
+
+    public void addScreenshotIfExists(Description desc){
+        String screenshotPath = "/screenshots/"
+                + desc.getMethodName()
+                + ".jpg";
+        File f = new File(testReportPath + screenshotPath);
+        if(f.exists()) {
+            try {
+                test.addScreenCaptureFromPath("." + screenshotPath);
+            } catch (IOException e1) {
+                e1.printStackTrace();
+            }
         }
     }
 }
